@@ -1,0 +1,39 @@
+RM      = rm -f
+RR      = rm -rf
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir	= @bindir@
+libdir	= @libdir@
+includedir = @includedir@
+INSTALL = install
+
+CFLAGS=@CFLAGS@ -DPREFIX=\"@prefix@\" -D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26 
+LDFLAGS=@LDFLAGS@ -lfuse -L/usr/lib64 
+
+all : wofs
+
+.cpp.o :
+	$(CXX) $(CFLAGS) -c $<
+
+.c.o :
+	$(CXX) $(CFLAGS) -c $<
+
+wofs : wofs.o
+	$(CXX) $(CFLAGS) wofs.o -o wofs $(LDFLAGS)
+
+
+clean:
+	$(RM) wofs *.o *??~ *.bak config.log
+
+
+dist-clean: clean
+	$(RM) config.log config.status config.cache taggedfs_config.h Makefile
+	$(RR) autom4te.cache
+
+install: taggedfs
+	$(INSTALL) -d $(bindir)
+	$(INSTALL) wofs ${bindir}
+
+# makedepend -Y. *.h *.cpp *.c -fMakefile.in
+

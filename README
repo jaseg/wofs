@@ -1,0 +1,12 @@
+wofs 0.2 (c) Gilles BERNARD lordikc@free.fr
+wofs provides a write only filesystem with naming restriction.
+Usage : wofs -o options mount_point
+  - dir=storage_directory directory where the files will be written.
+  - conf=configuration_directory directory containing allow.rules and deny.rules.
+From the mount point, one can only create directories and write files.
+Attempt to read a file fail with permission denied.
+Attempt to read a directory returns no file.
+Unfortunately one can know if a file or a directory exist if he knows its name. But nothing can be read out of it.
+The configuration files allow.rules and deny.rules contains one regular expression per line.
+File or directory creation will be allowed only if its path match an allowed rule.
+File or directory creation will be denied if its path match a denied rule.
