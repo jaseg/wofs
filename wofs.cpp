@@ -23,6 +23,8 @@
   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  Modified by jaseg <s@jaseg.de> (c) 2011
 */
 #include <fuse.h>
 #include "config.h"
@@ -123,12 +125,12 @@ static int wofs_mknod(const char *path, mode_t mode, dev_t rdev)
 static int wofs_mkdir(const char *path,
 		      mode_t mode) 
 {
-  if(allowRules.size() && match(path,denyRules))
+  if(match(path,denyRules))
     {
       fprintf(stderr,"%s denied\n",path);
       return -EPERM;
     }
-  if(denyRules.size() && !match(path,allowRules))
+  if(allowRules.size()&&(!match(path,allowRules)))
     {
       fprintf(stderr,"%s not allowed\n",path);
       return -EPERM;
@@ -241,12 +243,12 @@ static int wofs_access(const char *path, int mode)
     return -EPERM;
 
   // Check if path is allowed or denied
-  if(allowRules.size() && match(path,denyRules))
+  if(match(path,denyRules))
     {
       fprintf(stderr,"%s denied\n",path);
       return -EPERM;
     }
-  if(denyRules.size() && !match(path,allowRules))
+  if(allowRules.size()&&(!match(path,allowRules)))
     {
       fprintf(stderr,"%s not allowed\n",path);
       return -EPERM;
@@ -272,12 +274,12 @@ static int wofs_create(const char *path,
 		       struct fuse_file_info *fi) 
 {
   // Check if path is allowed or denied
-  if(allowRules.size() && match(path,denyRules))
+  if(match(path,denyRules))
     {
       fprintf(stderr,"%s denied\n",path);
       return -EPERM;
     }
-  if(denyRules.size() && !match(path,allowRules))
+  if(allowRules.size()&&(!match(path,allowRules)))
     {
       fprintf(stderr,"%s not allowed\n",path);
       return -EPERM;
